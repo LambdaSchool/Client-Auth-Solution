@@ -15,28 +15,30 @@ export const authError = (error) => {
   };
 };
 
-export const register = (email, password, confirmPassword, history) => {
+export const register = (username, password, confirmPassword, history) => {
+  console.log(`${ROOT_URL}/users`);
   return (dispatch) => {
     if (password !== confirmPassword) {
       dispatch(authError('Passwords do not match'));
       return;
     }
-    axios.post(`${ROOT_URL}/users`, { email, password })
+    axios.post(`${ROOT_URL}/users`, { username, password })
       .then(() => {
         dispatch({
           type: USER_REGISTERED,
         });
         history.push('/signin');
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log('Registration error: ', err);
         dispatch(authError('Failed to register user'));
       });
   };
 };
 
-export const login = (email, password, history) => {
+export const login = (username, password, history) => {
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/log-in`, { email, password })
+    axios.post(`${ROOT_URL}/login`, { username, password })
       .then(() => {
         dispatch({
           type: USER_AUTHENTICATED,
@@ -51,7 +53,7 @@ export const login = (email, password, history) => {
 
 export const logout = () => {
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/log-out`)
+    axios.post(`${ROOT_URL}/logout`)
       .then(() => {
         dispatch({
           type: USER_UNAUTHENTICATED,

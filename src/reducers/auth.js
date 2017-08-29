@@ -17,8 +17,7 @@ export default (auth = {}, action) => {
     case AUTHENTICATION_ERROR:
       return { ...auth, error: action.payload };
     case CHECK_IF_AUTHENTICATED:
-      console.log('check if authenticated: ', auth);
-      return auth;
+      return { ...auth }; 
     default:
       return auth;
   }

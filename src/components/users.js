@@ -11,7 +11,7 @@ class Users extends Component {
     return (
       <ul>
         {this.props.users.map((user, i) => {
-          return <li key={i}>{user.email}</li>;
+          return <li key={i}>{user.username}</li>;
         })}
       </ul>
     );

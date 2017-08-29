@@ -5,10 +5,10 @@ import { checkIfAuthenticated } from '../../actions';
 export default (ComposedComponent) => {
   class RequireAuthentication extends Component {
     componentWillMount() {
-      if (!this.props.checkIfAuthenticated()) this.props.history.replace('/signin');
+      if (!this.props.authenticated) this.props.history.replace('/signin');
     }
     render() {
-      if (!this.props.checkIfAuthenticated()) return null;
+      if (!this.props.authenticated) return null;
       return <ComposedComponent {...this.props} />;
     }
   }
@@ -19,9 +19,7 @@ export default (ComposedComponent) => {
     };
   };
 
-  connect(mapStateToProps, { checkIfAuthenticated })(RequireAuthentication);
-
-  return RequireAuthentication;
+  return connect(mapStateToProps, { checkIfAuthenticated })(RequireAuthentication);
 };
 
 // -------------
