@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { checkIfAuthenticated } from '../../actions';
 
 export default (ComposedComponent) => {
   class RequireAuthentication extends Component {
@@ -19,8 +18,6 @@ export default (ComposedComponent) => {
     };
   };
 
-  return connect(mapStateToProps, { checkIfAuthenticated })(RequireAuthentication);
+  return connect(mapStateToProps)(RequireAuthentication);
 };
 
-// -------------
-// index.js
