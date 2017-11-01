@@ -17,7 +17,6 @@ export const authError = (error) => {
 };
 
 export const register = (username, password, confirmPassword, history) => {
-  console.log(`${ROOT_URL}/users`);
   return (dispatch) => {
     if (password !== confirmPassword) {
       dispatch(authError('Passwords do not match'));
@@ -31,7 +30,6 @@ export const register = (username, password, confirmPassword, history) => {
         history.push('/signin');
       })
       .catch((err) => {
-        console.log('Registration error: ', err);
         dispatch(authError('Failed to register user'));
       });
   };
