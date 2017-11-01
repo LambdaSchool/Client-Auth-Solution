@@ -17,7 +17,6 @@ export const authError = (error) => {
 };
 
 export const register = (username, password, confirmPassword, history) => {
-  console.log(`${ROOT_URL}/users`);
   return (dispatch) => {
     if (password !== confirmPassword) {
       dispatch(authError('Passwords do not match'));
@@ -31,7 +30,6 @@ export const register = (username, password, confirmPassword, history) => {
         history.push('/signin');
       })
       .catch((err) => {
-        console.log('Registration error: ', err);
         dispatch(authError('Failed to register user'));
       });
   };
@@ -40,37 +38,36 @@ export const register = (username, password, confirmPassword, history) => {
 export const login = (username, password, history) => {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/login`, { username, password })
-      .then(() => {
+      .then((response) => {
+        localStorage.setItem('token', response.data.token);
         dispatch({
           type: USER_AUTHENTICATED,
         });
         history.push('/users');
       })
-      .catch(() => {
+      .catch((err) => {
         dispatch(authError('Incorrect email/password combo'));
       });
   };
 };
 
 export const logout = () => {
-  return (dispatch) => {
-    axios.post(`${ROOT_URL}/logout`)
-      .then(() => {
-        dispatch({
-          type: USER_UNAUTHENTICATED,
-        });
-      })
-      .catch(() => {
-        dispatch(authError('Failed to log you out'));
-      });
+  localStorage.removeItem('token');
+  return {
+    type: USER_UNAUTHENTICATED
   };
 };
 
 export const getUsers = () => {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/restricted/users`)
-      .then(response => {
-        console.log('Get users response: ', response);
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        authorization: token,
+      },
+    };
+    axios.get(`${ROOT_URL}/users`, config)
+      .then((response) => {
         dispatch({
           type: GET_USERS,
           payload: response.data
@@ -82,8 +79,3 @@ export const getUsers = () => {
   };
 };
 
-export const checkIfAuthenticated = () => {
-  return {
-    type: CHECK_IF_AUTHENTICATED
-  };
-};
